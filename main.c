@@ -3,6 +3,8 @@
 #include <math.h>
 #include <windows.h>
 #include <Winuser.h>
+#include <Winbase.h>
+
 static int N = 20, M = 20;
 static int Scale = 25;
 static int W = 520;
@@ -46,10 +48,10 @@ void DrawC(int mx, int my)
 	glColor3f(1.0, 1.0, 1.0);
 	glLineWidth(3);
 	glBegin(GL_LINE_LOOP);
-	glVertex2f(mx, my);
-	glVertex2f(mx, Cursor + my);
-	glVertex2f(Cursor + mx, Cursor + my);
-	glVertex2f(Cursor + mx, my);
+	glVertex2f(mx, 524-my);
+	glVertex2f(mx, 524-(Cursor + my));
+	glVertex2f(Cursor + mx, 524-(Cursor + my));
+	glVertex2f(Cursor + mx, 524-my);
 	glEnd();
 }
 
@@ -137,10 +139,8 @@ void mouse()
 {
 	POINT cp;
 	GetCursorPos(&cp);
-	coord_x = cp.x/25*25;
-	coord_y = cp.y / 25 * 25;
-	//printf("%d", coord_x);
-	//DrawC(coord_x, coord_y);
+	coord_x = cp.x/25*25 ;
+	coord_y = ((cp.y / 25) -1) * 25;
 	glutPostRedisplay();
 	glutTimerFunc(10, mouse, 0);
 }
@@ -153,6 +153,7 @@ void timer()
 
 int main(int argc, char **argv)
 {
+	SetCursorPos(20, 25);
 	s[0].x = 200;
 	s[0].y = 200;
 	glutInit(&argc, argv);
@@ -166,7 +167,6 @@ int main(int argc, char **argv)
 	glutDisplayFunc(display);
 	//glutKeyboardFunc(KeyboardEvent);
 	glutTimerFunc(10, timer, 0);
-	//glutPassiveMotionFunc(mouse);
 	glutTimerFunc(10, mouse, 0);
 	glutMainLoop();
 }
